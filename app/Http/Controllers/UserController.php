@@ -14,16 +14,25 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ];
-
-        if (Auth::guard('web')->attempt($credentials)) {
-
-            $employee_list = file_get_contents("sample.json");
-            $employees = json_decode(json_encode($employee_list) );
-            return $employees;
-    
+        $db_connect = true;
+        try {
+            \DB::connection()->getPDO();
+            \DB::connection()->getDatabaseName();
+            } catch (\Exception $e) {
+                $db_connect = false;
+                return \response('DB connection failed', 500)
+                ->header('Content-Type', 'text/plain');
         }
-        else{
-            return 'login failed';
+        if($db_connect){
+            if (Auth::guard('api')->attempt($credentials)) {
+                $employee_list = file_get_contents("sample.json");
+                $employees = json_decode(json_encode($employee_list) );
+                return \response($employees,200)->header('Content-Type', 'text/json');
+        
+            }
+            else{
+                return \response('Wrong Credentials. login failed',401);
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,9 +16,5 @@ use App\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('welcome');
 });
-// Route::get('/{user}','UserController@validate_user');
-
-// Route::Resource('users', UserController::class)->middleware('auth');
-Route::post('/users',[UserController::class,'getUsers']);
 
 
